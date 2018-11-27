@@ -1,4 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1" systemVersion="11A491" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
-    <elements/>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14460.32" systemVersion="18B75" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Category" representedClassName=".Category" syncable="YES" codeGenerationType="class">
+        <attribute name="name" attributeType="String" syncable="YES"/>
+        <attribute name="time" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <relationship name="items" toMany="YES" deletionRule="Cascade" destinationEntity="Item" inverseName="parentCategory" inverseEntity="Item" syncable="YES"/>
+    </entity>
+    <entity name="Item" representedClassName=".Item" syncable="YES" codeGenerationType="class">
+        <attribute name="done" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="time" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="title" attributeType="String" syncable="YES"/>
+        <relationship name="parentCategory" maxCount="1" deletionRule="Nullify" destinationEntity="Category" inverseName="items" inverseEntity="Category" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="Category" positionX="170.46875" positionY="-25.40625" width="128" height="88"/>
+        <element name="Item" positionX="-153.33203125" positionY="-73.47265625" width="128" height="103"/>
+    </elements>
 </model>
