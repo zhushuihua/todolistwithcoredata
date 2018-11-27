@@ -8,7 +8,8 @@
 
 import UIKit
 import CoreData
-class CategoryTableViewController: UITableViewController {
+import SwipeCellKit
+class CategoryTableViewController: UITableViewController, SwipeTableViewCellDelegate {
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     var categories:[Category] = [Category]()
     var selectedCategory:Category!
@@ -17,13 +18,15 @@ class CategoryTableViewController: UITableViewController {
         tableView.separatorStyle = .none
         loadList()
         tableView.reloadData()
+//        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first)
     }
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         return self.categories.count
     }
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! SwipeTableViewCell
+        cell.delegate = self
         cell.textLabel?.text = categories[indexPath.row].name
         return cell
     }
@@ -75,5 +78,22 @@ class CategoryTableViewController: UITableViewController {
         catch{
             print("error loading list from coredata \(error)")
         }
+    }
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
+        guard orientation == .right else { return nil }
+        let deleteAction = SwipeAction(style: .destructive, title: "Delete") { action, indexPath in
+            let category = self.categories.remove(at: indexPath.row)
+            try? self.context.delete(category)
+            try? self.context.save()
+            // handle action by updating model with deletion
+        }
+        //      deleteAction.image = UIImage(named: "delete")
+        return [deleteAction]
+    }
+    func tableView(_ tableView: UITableView, editActionsOptionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> SwipeOptions {
+        var options = SwipeOptions()
+        options.expansionStyle = .destructive
+        options.transitionStyle = .border
+        return options
     }
 }
